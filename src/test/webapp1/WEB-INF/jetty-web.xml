@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (C) 2011 Ovea <dev@ovea.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure id="webappContext" class="org.eclipse.jetty.webapp.WebAppContext">
+
+    <Set name="contextPath">/webapp1</Set>
+
+    <!--
+        configure session clustering
+    -->
+    <Set name="sessionHandler">
+        <New class="org.eclipse.jetty.server.session.SessionHandler">
+            <Arg>
+                <New class="com.ovea.jetty.session.redis.RedisSessionManager">
+                    <Arg>session/redis</Arg>
+                    <Arg>
+                        <New class="com.ovea.jetty.session.serializer.JsonSerializer"/>
+                    </Arg>
+                    <!-- set the interval in seconds to force session persistence event if it didn't changed. Default to 60 seconds -->
+                    <Set name="saveInterval">20</Set>
+                    <!-- set the cookie domain -->
+                    <Set name="sessionDomain">localhost</Set>
+                    <!-- set the cookie path -->
+                    <Set name="sessionPath">/</Set>
+                    <!-- set the cookie max age in seconds. Default is -1 (no max age). 1 day = 86400 seconds -->
+                    <Set name="maxCookieAge">80</Set>
+                    <!-- set the interval in seconds to refresh the cookie max age. Default to 0. -->
+                    <Set name="refreshCookieAge">20</Set>
+                </New>
+            </Arg>
+        </New>
+    </Set>
+
+</Configure>
